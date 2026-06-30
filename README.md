@@ -1,4 +1,4 @@
-#MLbandGapVasp 0.2.3
+**MLbandGapVasp 0.2.3**
 
 This script works only for noncollinear calculations (i.e. LSORBIT = .TRUE.)
 Proceed with a band structure calculation and then run this script in the same directory as OUTCAR, IBZKPT, and EIGENVAL files.

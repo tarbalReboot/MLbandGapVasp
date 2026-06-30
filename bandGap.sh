@@ -2,18 +2,18 @@
            fermi=$(gawk '/E-fermi/ {print $3}' OUTCAR)                      # rip fermi energy from OUTCAR
            nbands=$(gawk '/NBANDS/ {print $15}' OUTCAR)                      # rip nbands from OUTCAR
            kpts=$(gawk 'NR==2 {print $1;exit}' IBZKPT)                      # rip # of k points from IBZKPT
-           nbands2='{print $nbands+2}'                                    # set line to skip    
+	   nbands2=$(awk '{print $nbands+2}')                                    # set line to skip    
            gawk 'NR > 8 {print $2}' EIGENVAL > band_gaptempfile1            # skip first 8 lines
            gawk -v s=$nbands2 'NR%s != 0 {print $1}' band_gaptempfile1 > band_gaptempfile2   # skip k points
            for i in `cat band_gaptempfile2` ; do                            # subtract 
-           j='{print $i - $fermi}'                                        #    fermi
+		j=$(awk '{print $i - $fermi}')                                        #    fermi
            echo "$j" >> band_gaptempfile3                                   #    energy
            done                                                             #    from EIGENVALS
            gawk '/<r>/ min==""|| $1 > 0 {print $1}' band_gaptempfile3 > band_gaptempfile4    # rip + eigenvals
            top=$(gawk 'min==""||min>$1{min=$1}END{print min}' band_gaptempfile4)             # cond band min
            gawk '/<r>/ max==""|| $1 < 0 {print $1}' band_gaptempfile3 > band_gaptempfile5    # rip - eigenvals
            bottom=$(gawk 'max==""||max<$1{max=$1}END{print max}' band_gaptempfile5)          # val band max
-           gap='{print $top - $bottom}'                                   # calculate band gap
+	   gap=$(awk '{print $top - $bottom}')                                   # calculate band gap
 rm band_gaptempfile*
 echo "Written for VASP versions 5.2.2 and 5.3.5"     #not guaranteed for any other version, nor for collinear calculations...
 echo "Fermi energy = $fermi"
